@@ -1,0 +1,20 @@
+# Node dependencies (so TAs don't need to download everything)
+**/node_modules/
+
+# .NET build outputs
+**/bin/
+**/obj/
+
+# Frontend build outputs
+frontend/dist/
+frontend/build/
+
+# OS/editor
+.DS_Store
+.vscode/
+*.log
+
+# Env files (if you ever add them locally)
+.env
+.env.*
+
