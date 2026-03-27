@@ -14,7 +14,29 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReact", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173", "http://localhost:3000")
+            .SetIsOriginAllowed(origin =>
+            {
+                if (string.IsNullOrWhiteSpace(origin))
+                {
+                    return false;
+                }
+
+                if (!Uri.TryCreate(origin, UriKind.Absolute, out var uri))
+                {
+                    return false;
+                }
+
+                if (!string.Equals(uri.Scheme, Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+
+                var isLocalHost =
+                    string.Equals(uri.Host, "localhost", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(uri.Host, "127.0.0.1", StringComparison.OrdinalIgnoreCase);
+
+                return isLocalHost;
+            })
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
