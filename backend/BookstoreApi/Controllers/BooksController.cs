@@ -27,7 +27,8 @@ public class BooksController : ControllerBase
     public async Task<ActionResult<PaginatedResponse<BookDto>>> GetBooks(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 5,
-        [FromQuery] string sortDir = "asc")
+        [FromQuery] string sortDir = "asc",
+        [FromQuery] string? category = null)
     {
         // Clamp inputs to sensible bounds.
         if (page < 1) page = 1;
@@ -38,11 +39,19 @@ public class BooksController : ControllerBase
         var ascending = normalizedSortDir != "desc";
 
         var baseQuery = _context.Books.AsNoTracking();
+        if (!string.IsNullOrWhiteSpace(category))
+        {
+            baseQuery = baseQuery.Where(b => b.Category == category.Trim());
+        }
 
         var totalItems = await baseQuery.CountAsync();
         var totalPages = totalItems == 0
             ? 0
             : (int)Math.Ceiling(totalItems / (double)pageSize);
+        if (totalPages > 0 && page > totalPages)
+        {
+            page = totalPages;
+        }
 
         var orderedQuery = ascending
             ? baseQuery.OrderBy(b => b.Title)
@@ -73,6 +82,21 @@ public class BooksController : ControllerBase
             TotalPages = totalPages,
             Items = books
         });
+    }
+
+    [HttpGet("categories")]
+    [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<string>>> GetCategories()
+    {
+        var categories = await _context.Books
+            .AsNoTracking()
+            .Select(b => b.Category)
+            .Where(c => !string.IsNullOrWhiteSpace(c))
+            .Distinct()
+            .OrderBy(c => c)
+            .ToListAsync();
+
+        return Ok(categories);
     }
 }
 
