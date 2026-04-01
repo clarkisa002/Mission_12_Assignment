@@ -46,8 +46,14 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Connect EF Core to the pre-populated SQLite database committed in the repo root.
-var dbPath = Path.Combine(builder.Environment.ContentRootPath, "..", "..", "Bookstore.sqlite");
+// Connect EF Core to the pre-populated SQLite database.
+// In production (Azure), the DB is copied alongside the published app.
+// In development, it lives at the repo root (two levels up from the project folder).
+var dbPath = Path.Combine(builder.Environment.ContentRootPath, "Bookstore.sqlite");
+if (!File.Exists(dbPath))
+{
+    dbPath = Path.Combine(builder.Environment.ContentRootPath, "..", "..", "Bookstore.sqlite");
+}
 builder.Services.AddDbContext<BookstoreApi.Data.BookstoreContext>(options =>
     options.UseSqlite($"Data Source={dbPath}")
 );
