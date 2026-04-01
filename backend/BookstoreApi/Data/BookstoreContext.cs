@@ -20,7 +20,7 @@ public class BookstoreContext : DbContext
             entity.ToTable("Books");
             entity.HasKey(e => e.BookID);
 
-            entity.Property(e => e.BookID).HasColumnName("BookID");
+            entity.Property(e => e.BookID).HasColumnName("BookID").ValueGeneratedOnAdd();
             entity.Property(e => e.Title).HasColumnName("Title");
             entity.Property(e => e.Author).HasColumnName("Author");
             entity.Property(e => e.Publisher).HasColumnName("Publisher");

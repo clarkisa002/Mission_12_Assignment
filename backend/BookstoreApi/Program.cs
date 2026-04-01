@@ -8,7 +8,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddControllers();
 
-// Allow the React dev server to call the API during development.
+// Allow the React dev server (local) and Azure-hosted front ends to call the API.
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact", policy =>
@@ -26,16 +26,20 @@ builder.Services.AddCors(options =>
                     return false;
                 }
 
-                if (!string.Equals(uri.Scheme, Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase))
+                var host = uri.Host;
+                if (string.Equals(host, "localhost", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(host, "127.0.0.1", StringComparison.OrdinalIgnoreCase))
                 {
-                    return false;
+                    return true;
                 }
 
-                var isLocalHost =
-                    string.Equals(uri.Host, "localhost", StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(uri.Host, "127.0.0.1", StringComparison.OrdinalIgnoreCase);
+                if (host.EndsWith(".azurestaticapps.net", StringComparison.OrdinalIgnoreCase) ||
+                    host.EndsWith(".azurewebsites.net", StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
 
-                return isLocalHost;
+                return false;
             })
             .AllowAnyHeader()
             .AllowAnyMethod();

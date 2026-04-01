@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { Offcanvas, Tooltip, Toast } from "bootstrap";
 
 type SortDirection = "asc" | "desc";
@@ -266,6 +267,9 @@ export default function BookList() {
             <h2 className="mb-0">Bookstore</h2>
 
             <div className="d-flex flex-wrap align-items-center gap-2">
+              <Link className="btn btn-outline-secondary btn-sm" to="/adminbooks">
+                Admin books
+              </Link>
               <div className="input-group input-group-sm" style={{ maxWidth: 260 }}>
                 <span className="input-group-text">Results per page</span>
                 <select
