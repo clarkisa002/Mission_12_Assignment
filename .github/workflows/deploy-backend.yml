@@ -3,13 +3,13 @@ name: Deploy Backend to Azure Web App
 on:
   push:
     branches:
-      - main
+      - phase-6
     paths:
       - "backend/**"
       - ".github/workflows/deploy-backend.yml"
   pull_request:
     branches:
-      - main
+      - phase-6
     paths:
       - "backend/**"
 
