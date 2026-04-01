@@ -261,15 +261,17 @@ export default function BookList() {
 
   return (
     <div className="container py-4">
+      <div className="text-center mb-4">
+        <h2 className="mb-3">Bookstore</h2>
+        <Link className="btn btn-dark btn-lg px-5" to="/adminbooks">
+          Admin Books
+        </Link>
+      </div>
+
       <div className="row g-4">
         <div className="col-12 col-lg-9">
           <div className="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
-            <h2 className="mb-0">Bookstore</h2>
-
             <div className="d-flex flex-wrap align-items-center gap-2">
-              <Link className="btn btn-outline-secondary btn-sm" to="/adminbooks">
-                Admin books
-              </Link>
               <div className="input-group input-group-sm" style={{ maxWidth: 260 }}>
                 <span className="input-group-text">Results per page</span>
                 <select
@@ -340,9 +342,6 @@ export default function BookList() {
                   <tr>
                     <th>Title</th>
                     <th>Author</th>
-                    <th>Publisher</th>
-                    <th>ISBN</th>
-                    <th>Classification</th>
                     <th>Category</th>
                     <th className="text-end">Pages</th>
                     <th className="text-end">Price</th>
@@ -352,7 +351,7 @@ export default function BookList() {
                 <tbody>
                   {books.length === 0 ? (
                     <tr>
-                      <td colSpan={9} className="text-center text-muted">
+                      <td colSpan={6} className="text-center text-muted">
                         No books found.
                       </td>
                     </tr>
@@ -361,9 +360,6 @@ export default function BookList() {
                       <tr key={b.bookID}>
                         <td>{b.title}</td>
                         <td>{b.author}</td>
-                        <td>{b.publisher}</td>
-                        <td>{b.isbn}</td>
-                        <td>{b.classification}</td>
                         <td>{b.category}</td>
                         <td className="text-end">{b.pageCount}</td>
                         <td className="text-end">${formatPrice(b.price)}</td>
